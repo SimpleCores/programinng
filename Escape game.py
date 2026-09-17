@@ -1,5 +1,6 @@
 
-# Load images
+# Load images to game
+
 img_test2 = pygame.image.load("eat.png").convert_alpha()
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
 
