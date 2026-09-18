@@ -1,15 +1,33 @@
+import pygame
+import sys
+import time
+
+#type (python "Escape game.py") in terminal to open 
+#load images
+pygame.init()
+pygame.display
+
+#game setup
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("game")
+
+clock = pygame.time.Clock()
+FPS = 60
 
 # Load images into my game
 img_test2 = pygame.image.load("eat.png").convert_alpha()
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
 
 # Size images
-img_test2 = pygame.transform.scale(img_test2, (720, 350))
-img_test1 = pygame.transform.scale(img_test1, (720, 400))
+img_test2 = pygame.transform.scale(img_test2, (720, 400))
+img_test1 = pygame.transform.scale(img_test1, (800, 425))
 
 # Create colliders for the images
-img_test2_rect = img_test2.get_rect(topleft=(280, 75))
-img_test1_rect = img_test1.get_rect(topleft=(280, 30))
+img_test2_rect = img_test2.get_rect(topleft=(0, 0))
+img_test1_rect = img_test1.get_rect(topleft=(0, 0))
 
 
 running = True
