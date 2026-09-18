@@ -17,7 +17,8 @@ pygame.display.set_caption("game")
 clock = pygame.time.Clock()
 FPS = 60
 
-# Load images into my game
+# Load images to game
+ into my game
 img_test2 = pygame.image.load("eat.png").convert_alpha()
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
 
