@@ -4,31 +4,44 @@ import sys
 pygame.init()
 
 # Window
-WIDTH = 800
-HEIGHT = 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Point and Click Adventure")
 clock = pygame.time.Clock()
 
 # Game state
 room = 1
 inventory = []
-message = "Look around and find the key."
 
-# Objects
-key = pygame.Rect(200, 400, 50, 30)
-door = pygame.Rect(550, 200, 120, 250)
-chest = pygame.Rect(350, 350, 100, 80)
-back = pygame.Rect(5, 550, 100, 40)
+# Load images
+room1 = pygame.image.load("Block.png").convert()
+room2 = pygame.image.load("Black Border.png").convert()
 
-font = pygame.font.SysFont(None, 28)
+key_image = pygame.image.load("eat.png").convert_alpha()
+door_image = pygame.image.load("Test image.png").convert_alpha()
+chest_image = pygame.image.load("Story2.png").convert_alpha()
+back_image = pygame.image.load("Story1.png").convert_alpha()
+
+# Resize images
+room1 = pygame.transform.scale(room1, (800, 600))
+room2 = pygame.transform.scale(room2, (800, 600))
+
+key_image = pygame.transform.scale(key_image, (50, 30))
+door_image = pygame.transform.scale(door_image, (120, 250))
+chest_image = pygame.transform.scale(chest_image, (100, 80))
+back_image = pygame.transform.scale(back_image, (100, 40))
+
+# Image positions / colliders
+key_rect = key_image.get_rect(topleft=(200, 400))
+door_rect = door_image.get_rect(topleft=(550, 200))
+chest_rect = chest_image.get_rect(topleft=(350, 350))
+back_rect = back_image.get_rect(topleft=(5, 550))
 
 running = True
 
 while running:
-    mouse_pos = pygame.mouse.get_pos()
 
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
 
@@ -36,51 +49,43 @@ while running:
 
             if room == 1:
 
-                if key and key.collidepoint(mouse_pos):
+                # Click the key
+                if key_rect and key_rect.collidepoint(event.pos):
                     inventory.append("Rusty Key")
-                    key = None
-                    message = "You picked up the Rusty Key."
+                    key_rect = None
 
-                elif door.collidepoint(mouse_pos):
+                # Click the door
+                elif door_rect.collidepoint(event.pos):
                     room = 2
-                    message = "You entered Room 2."
 
             elif room == 2:
 
-                if chest.collidepoint(mouse_pos):
+                # Click the chest
+                if chest_rect.collidepoint(event.pos):
 
                     if "Rusty Key" in inventory:
-                        message = "You unlocked the chest! You win!"
+                        print("You unlocked the chest! You win!")
                     else:
-                        message = "The chest is locked."
+                        print("The chest is locked.")
 
-                elif back.collidepoint(mouse_pos):
+                # Click the back button
+                elif back_rect.collidepoint(event.pos):
                     room = 1
-                    message = "You returned to Room 1."
 
     # Draw room
-    screen.fill((40, 40, 40))
-
     if room == 1:
-        pygame.draw.rect(screen, (80, 50, 50), (0, 0, WIDTH, 500))
-        pygame.draw.rect(screen, (0, 0, 0), door)
 
-        if key:
-            pygame.draw.rect(screen, (255, 215, 0), key)
+        screen.blit(room1, (0, 0))
+        screen.blit(door_image, door_rect)
+
+        if key_rect:
+            screen.blit(key_image, key_rect)
 
     else:
-        pygame.draw.rect(screen, (50, 80, 50), (0, 0, WIDTH, 500))
-        pygame.draw.rect(screen, (139, 69, 19), chest)
-        pygame.draw.rect(screen, (200, 200, 200), back)
 
-    # UI
-    pygame.draw.rect(screen, (200, 200, 200), (0, 500, WIDTH, 100))
-
-    text = font.render(message, True, (0, 0, 0))
-    screen.blit(text, (20, 515))
-
-    inventory_text = font.render("Inventory: " + str(inventory), True, (0, 0, 0))
-    screen.blit(inventory_text, (20, 550))
+        screen.blit(room2, (0, 0))
+        screen.blit(chest_image, chest_rect)
+        screen.blit(back_image, back_rect)
 
     pygame.display.flip()
     clock.tick(60)
