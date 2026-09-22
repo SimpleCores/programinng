@@ -6,6 +6,7 @@ import time
 
 pygame.init()
 
+
 # game setup
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -13,19 +14,22 @@ SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("game")
 
+
 # text font
 font = pygame.font.SysFont(None, 50)
+
 
 # menu buttons
 play_button = pygame.Rect(300, 200, 200, 70)
 quit_button = pygame.Rect(300, 320, 200, 70)
 
+
 # caps frames to 60
 clock = pygame.time.Clock()
 FPS = 60
 
+
 # Loads images
-img_test2 = pygame.image.load("eat.png").convert_alpha()
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
 
 #story images
@@ -91,12 +95,12 @@ Story59 = pygame.image.load("Story59.png").convert_alpha()
 Story60 = pygame.image.load("Story60.png").convert_alpha()
 
 #game images
-game1 = pygame.image.load("game1.png").convert_alpha()
-game2 = pygame.image.load("game2.png").convert_alpha()
-game3 = pygame.image.load("game3.png").convert_alpha()
+Room1 = pygame.image.load("Room1.png").convert_alpha()
+Room2 = pygame.image.load("Room2.png").convert_alpha()
+Room3 = pygame.image.load("Room3.png").convert_alpha()
+
 
 # Sizes images
-img_test2 = pygame.transform.scale(img_test2, (720, 400))
 img_test1 = pygame.transform.scale(img_test1, (800, 425))
 
 # Story images
@@ -162,19 +166,18 @@ Story59 = pygame.transform.scale(Story59, (800, 600))
 Story60 = pygame.transform.scale(Story60, (800, 600))
 
 #game images
-game1 = pygame.transform.scale(game1, (800, 600))
-game2 = pygame.transform.scale(game2, (800, 600))
-game3 = pygame.transform.scale(game3, (800, 600))
+Room1 = pygame.transform.scale(Room1, (800, 425))
+Room2 = pygame.transform.scale(Room2, (800, 425))
+Room3 = pygame.transform.scale(Room3, (800, 425))
 
 
 # Create colliders for images
-img_test2_rect = img_test2.get_rect(topleft=(0, 0))
 img_test1_rect = img_test1.get_rect(topleft=(0, 0))
-
+Room1_rect = Room1.get_rect(topleft=(0, 0))
 
 # Cutscene images and how long they show for
 cutscene = [
-    (Story1, 1),
+    (Story1, 2),
     (Story2, 1),
     (Story3, 1),
     (Story4, 1),
@@ -182,67 +185,69 @@ cutscene = [
     (Story6, 1),
     (Story7, 1),
     (Story8, 1),
-    (Story9, 1),
-    (Story10, 1),
-    (Story11, 1),
-    (Story12, 1),
-    (Story13, 1),
+    (Story9, 0.5),
+    (Story10, 0.5),
+    (Story11, 0.5),
+    (Story12, 0.25),
+    (Story13, 0.5),
     (Story14, 1),
     (Story15, 1),
     (Story16, 1),
     (Story17, 1),
-    (Story18, 1),
-    (Story19, 1),
-    (Story20, 1),
-    (Story21, 1),
-    (Story22, 1),
-    (Story23, 1),
-    (Story24, 1),
-    (Story25, 1),
-    (Story26, 1),
-    (Story27, 1),
-    (Story28, 1),
-    (Story29, 1),
-    (Story30, 1),
-    (Story31, 1),
-    (Story32, 1),
-    (Story33, 1),
-    (Story34, 1),
-    (Story35, 1),
-    (Story36, 1),
-    (Story37, 1),
-    (Story38, 1),
-    (Story39, 1),
-    (Story40, 1),
-    (Story41, 1),
-    (Story42, 1),
-    (Story43, 1),
-    (Story44, 1),
-    (Story45, 1),
-    (Story46, 1),
-    (Story47, 1),
-    (Story48, 1),
-    (Story49, 1),
-    (Story50, 1),
-    (Story51, 1),
-    (Story52, 1),
-    (Story53, 1),
-    (Story54, 1),
+    (Story18, 0.4),
+    (Story19, 0.4),
+    (Story20, 0.4),
+    (Story21, 0.4),
+    (Story22, 0.4),
+    (Story23, 0.4),
+    (Story24, 0.4),
+    (Story25, 0.4),
+    (Story26, 0.4),
+    (Story27, 0.7),
+    (Story28, 0.5),
+    (Story29, 0.5),
+    (Story30, 0.5),
+    (Story31, 0.5),
+    (Story32, 0.5),
+    (Story33, 0.5),
+    (Story34, 0.5),
+    (Story35, 0.5),
+    (Story36, 0.5),
+    (Story37, 0.5),
+    (Story38, 0.5),
+    (Story39, 0.5),
+    (Story40, 0.5),
+    (Story41, 0.5),
+    (Story42, 0.5),
+    (Story43, 0.5),
+    (Story44, 0.7),
+    (Story45, 0.7),
+    (Story46, 0.7),
+    (Story47, 0.7),
+    (Story48, 0.7),
+    (Story49, 0.7),
+    (Story50, 0.7),
+    (Story51, 0.7),
+    (Story52, 0.2),
+    (Story53, 0.2),
+    (Story54, 0.2),
     (Story55, 1),
     (Story56, 1),
-    (Story57, 1),
-    (Story58, 1),
-    (Story59, 1),
-    (Story60, 1),
-
+    (Story57, 0.2),
+    (Story58, 0.2),
+    (Story59, 0.2),
+    (Story60, 0.2),
 ]
+
 
 current_slide = 0
 start_time = pygame.time.get_ticks()
 
+
 # Game loop
 menu = True
 running = True
+
 
 while running:
 
@@ -321,11 +326,10 @@ while running:
             image, duration = cutscene[current_slide]
             screen.blit(image, (0, 0))
 
+
     # The actual game thing after cutscene finishes
          else:
-            screen.blit(game1, game1_rect)
-            screen.blit(game2, game2_rect)
-            screen.blit(game3, game3_rect)
+            screen.blit(Room1, Room1_rect)
 
 
     pygame.display.flip()
