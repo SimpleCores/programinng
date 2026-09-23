@@ -6,7 +6,6 @@ import time
 
 pygame.init()
 
-
 # game setup
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -14,15 +13,16 @@ SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("game")
 
+# Game state
+room = 1
+inventory = []
 
 # text font
 font = pygame.font.SysFont(None, 50)
 
-
 # menu buttons
 play_button = pygame.Rect(300, 200, 200, 70)
 quit_button = pygame.Rect(300, 320, 200, 70)
-
 
 # caps frames to 60
 clock = pygame.time.Clock()
@@ -31,6 +31,7 @@ FPS = 60
 
 # Loads images
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
+Block = pygame.image.load("Block.png").convert_alpha()
 
 #story images
 Story1 = pygame.image.load("Story1.png").convert_alpha()
@@ -99,9 +100,13 @@ Room1 = pygame.image.load("Room1.png").convert_alpha()
 Room2 = pygame.image.load("Room2.png").convert_alpha()
 Room3 = pygame.image.load("Room3.png").convert_alpha()
 
+#clickable images
+Back = pygame.image.load("Back.png").convert_alpha()
+
 
 # Sizes images
 img_test1 = pygame.transform.scale(img_test1, (800, 425))
+Block = pygame.transform.scale(Block, (32, 65))
 
 # Story images
 Story1 = pygame.transform.scale(Story1, (800, 600))
@@ -170,10 +175,22 @@ Room1 = pygame.transform.scale(Room1, (800, 425))
 Room2 = pygame.transform.scale(Room2, (800, 425))
 Room3 = pygame.transform.scale(Room3, (800, 425))
 
+#clickable images
+Back = pygame.transform.scale(Back, (50, 100))
 
-# Create colliders for images
+
+# Create position and colliders for images
+#test images
 img_test1_rect = img_test1.get_rect(topleft=(0, 0))
+Block_rect = Block.get_rect(topleft=(385,165))
+
+#game images
 Room1_rect = Room1.get_rect(topleft=(0, 0))
+Room2_rect = Room2.get_rect(topleft=(0, 0))
+
+#clickable images
+Back_rect = Back.get_rect(topleft=(0,0))
+
 
 # Cutscene images and how long they show for
 cutscene = [
@@ -239,7 +256,6 @@ cutscene = [
     (Story60, 0.2),
 ]
 
-
 current_slide = 0
 start_time = pygame.time.get_ticks()
 
@@ -273,13 +289,8 @@ while running:
                 if quit_button.collidepoint(event.pos):
                     running = False
 
-# code here uncessceasry but lets me know if the button clik  actually work or not
-            else:
 
-                if img_test1_rect.collidepoint(event.pos):
-                    print("button cliked")
-
-    # Change cursor
+    # Change cursor for menu buttons
     if menu:
 
         if play_button.collidepoint(mouse_pos) or quit_button.collidepoint(mouse_pos):
@@ -290,7 +301,7 @@ while running:
     else:
     # Move to the next image after its timer
         if current_slide < len(cutscene):
-
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             image, duration = cutscene[current_slide]
 
             if duration is not None:
@@ -298,12 +309,6 @@ while running:
                     current_slide += 1
                     start_time = current_time
 
-
-
-        if img_test1_rect.collidepoint(mouse_pos):
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-        else:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
     # Background color
     screen.fill((40, 40, 40))
@@ -320,7 +325,8 @@ while running:
         screen.blit(play_text, (350, 215))
         screen.blit(quit_text, (350, 335))
 
-    # Cutscene after pressing play
+
+    # Cutscene occuring after pressing play
     else:
          if current_slide < len(cutscene):
             image, duration = cutscene[current_slide]
@@ -329,11 +335,40 @@ while running:
 
     # The actual game thing after cutscene finishes
          else:
-            screen.blit(Room1, Room1_rect)
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if room == 1:
+
+                    #door click
+                    if Block_rect.collidepoint(event.pos):
+                        room = 2
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+                elif room == 2:
+                    if Back_rect.collidepoint(event.pos):
+                        room = 1
+
+
+# change cursor when hovering over an interactable object
+            if room == 1:
+            
+                if Block_rect.collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        
+
+
+#images
+            if room == 1:
+               screen.blit(Room1, Room1_rect)
+               screen.blit(Block, Block_rect)
+
+            else:
+               screen.blit(Room2, Room2_rect)
 
 
     pygame.display.flip()
-
     clock.tick(FPS)
 
 # Exit smoothly code

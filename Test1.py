@@ -1,72 +1,28 @@
 import pygame
 import sys
 
-# type python "Test1.py" in terminal to open
-
+# Initialize Pygame
 pygame.init()
-
-# Window
 screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Cutscene")
+pygame.display.set_caption("Invisible Collider Example")
 
-clock = pygame.time.Clock()
+# 1. Define the invisible collider area (x, y, width, height)
+invisible_button = pygame.Rect(300, 250, 200, 100)
 
-# Load cutscene images
-Story1 = pygame.image.load("Story1.png").convert_alpha()
-Story2 = pygame.image.load("Story2.png").convert_alpha()
-Story3 = pygame.image.load("Story3.png").convert_alpha()
-
-# Resize images to fit the screen
-Story1 = pygame.transform.scale(Story1, (800, 600))
-Story2 = pygame.transform.scale(Story2, (800, 600))
-Story3 = pygame.transform.scale(Story3, (800, 600))
-
-# Cutscene images and how long they show
-cutscene = [
-    (Story1, 2),
-    (Story2, 2),
-    (Story3, 2)
-]
-
-current_slide = 0
-start_time = pygame.time.get_ticks()
-
-running = True
-
-while running:
-
-    current_time = pygame.time.get_ticks()
-
+while True:
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            sys.exit()
+            
+        # 2. Check for mouse button clicks
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Left click
+                # 3. Check if the mouse position is inside the invisible rect
+                if invisible_button.collidepoint(event.pos):
+                    print("Invisible collider clicked!")
 
-   
-
-
-
-    # Move to the next image after its timer
-    if current_slide < len(cutscene):
-
-        image, duration = cutscene[current_slide]
-
-        if duration is not None:
-            if current_time - start_time >= duration * 1000:
-                current_slide += 1
-                start_time = current_time
-
-    # Draw
-    screen.fill((0, 0, 0))
-
-    if current_slide < len(cutscene):
-        image, duration = cutscene[current_slide]
-        screen.blit(image, (0, 0))
-
-
-
+    # Fill the screen with a solid color (the rect is never drawn)
+    screen.fill((40, 40, 40))
+    
     pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
-sys.exit()

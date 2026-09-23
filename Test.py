@@ -40,6 +40,8 @@ running = True
 
 while running:
 
+    mouse_pos = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -71,6 +73,21 @@ while running:
                 # Click the back button
                 elif back_rect.collidepoint(event.pos):
                     room = 1
+
+    # Change cursor when hovering over clickable objects
+    if room == 1:
+
+        if door_rect.collidepoint(mouse_pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+    else:
+
+        if chest_rect.collidepoint(mouse_pos) or back_rect.collidepoint(mouse_pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
     # Draw room
     if room == 1:
