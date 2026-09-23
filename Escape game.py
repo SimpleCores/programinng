@@ -2,11 +2,11 @@ import pygame
 import sys
 import time
 
-# type python "Escape game.py" in terminal to open
+# Type python "Escape game.py" in terminal to open
 
 pygame.init()
 
-# game setup
+# Game setup
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
@@ -17,14 +17,16 @@ pygame.display.set_caption("game")
 room = 1
 inventory = []
 
-# text font
+# Text font
 font = pygame.font.SysFont(None, 50)
 
-# menu buttons
+# Buttons
 play_button = pygame.Rect(300, 200, 200, 70)
 quit_button = pygame.Rect(300, 320, 200, 70)
 
-# caps frames to 60
+skip_button = pygame.Rect(716, 550, 80, 40)
+
+# Caps frames to 60
 clock = pygame.time.Clock()
 FPS = 60
 
@@ -33,7 +35,7 @@ FPS = 60
 img_test1 = pygame.image.load("Test image.png").convert_alpha()
 Block = pygame.image.load("Block.png").convert_alpha()
 
-#story images
+# Story images
 Story1 = pygame.image.load("Story1.png").convert_alpha()
 Story2 = pygame.image.load("Story2.png").convert_alpha()
 Story3 = pygame.image.load("Story3.png").convert_alpha()
@@ -280,6 +282,7 @@ while running:
 
         # Menu button click
         if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.pos)
 
             if menu:
 
@@ -332,6 +335,21 @@ while running:
             image, duration = cutscene[current_slide]
             screen.blit(image, (0, 0))
 
+            pygame.draw.rect(screen, (60, 60, 60), skip_button)
+
+            skip_text = font.render("SKIP", True, (255, 255, 255))
+            screen.blit(skip_text, (718, 550))
+
+        # Skip button
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if skip_button.collidepoint(event.pos):
+                    current_slide = len(cutscene)
+
+    # Change cursor when hovering over skip
+                if skip_button.collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
     # The actual game thing after cutscene finishes
          else:
