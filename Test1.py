@@ -1,28 +1,43 @@
+"""Place a polygone line with the clicks of the mouse."""
+
 import pygame
-import sys
+from pygame.locals import *
 
-# Initialize Pygame
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+GRAY = (150, 150, 150)
+
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Invisible Collider Example")
+screen = pygame.display.set_mode((640, 240))
 
-# 1. Define the invisible collider area (x, y, width, height)
-invisible_button = pygame.Rect(300, 250, 200, 100)
+drawing = False
+points = []
+running = True
 
-while True:
+while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-            
-        # 2. Check for mouse button clicks
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left click
-                # 3. Check if the mouse position is inside the invisible rect
-                if invisible_button.collidepoint(event.pos):
-                    print("Invisible collider clicked!")
+        if event.type == QUIT:
+            running = False
 
-    # Fill the screen with a solid color (the rect is never drawn)
-    screen.fill((40, 40, 40))
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                if len(points) > 0:
+                    points.pop()
+
+        elif event.type == MOUSEBUTTONDOWN:
+            points.append(event.pos)
+            drawing = True
+
+        elif event.type == MOUSEBUTTONUP:
+            drawing = False
+
+        elif event.type == MOUSEMOTION and drawing:
+            points[-1] = event.pos
     
-    pygame.display.flip()
+    screen.fill(GRAY)
+    if len(points)>1:
+        rect = pygame.draw.lines(screen, RED, True, points, 3)
+        pygame.draw.rect(screen, GREEN, rect, 1)
+    pygame.display.update()
+
+pygame.quit()
