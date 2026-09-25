@@ -26,11 +26,9 @@ quit_button = pygame.Rect(300, 320, 200, 70)
 
 skip_button = pygame.Rect(716, 550, 80, 40)
 
-
 # Caps frames to 60
 clock = pygame.time.Clock()
 FPS = 60
-
 
 # Room transition
 fade_alpha = 0
@@ -43,7 +41,6 @@ CLICK_COOLDOWN = 500  # milliseconds
 
 
 # Loads images
-
 # Story images
 Story1 = pygame.image.load("Story1.png").convert_alpha()
 Story2 = pygame.image.load("Story2.png").convert_alpha()
@@ -111,6 +108,8 @@ Room1 = pygame.image.load("Room1.png").convert_alpha()
 Room2 = pygame.image.load("Room2.png").convert_alpha()
 Room3 = pygame.image.load("Room3.png").convert_alpha()
 Room4 = pygame.image.load("Room4.png").convert_alpha()
+Room_left1 = pygame.image.load("Room_left1.png").convert_alpha()
+Room_right1 = pygame.image.load("Room_right1.png").convert_alpha()
 
 #clickable images
 BackUI = pygame.image.load("BackUI.png").convert_alpha()
@@ -118,7 +117,6 @@ BackUI_Text = pygame.image.load("BackUI_Text.png").convert_alpha()
 
 
 # Sizes images
-
 # Story images
 Story1 = pygame.transform.scale(Story1, (800, 600))
 Story2 = pygame.transform.scale(Story2, (800, 600))
@@ -186,18 +184,22 @@ Room1 = pygame.transform.scale(Room1, (800, 425))
 Room2 = pygame.transform.scale(Room2, (800, 425))
 Room3 = pygame.transform.scale(Room3, (800, 425))
 Room4 = pygame.transform.scale(Room4, (800, 425))
+Room_left1 = pygame.transform.scale(Room_left1, (800, 425))
+Room_right1 = pygame.transform.scale(Room_right1, (800, 425))
 
 #clickable images
 BackUI = pygame.transform.scale(BackUI, (825, 100))
 BackUI_Text = pygame.transform.scale(BackUI_Text, (200, 35))
 
-# Create position and colliders for images
 
+# Create position and colliders for images
 #game images
 Room1_rect = Room1.get_rect(topleft=(0, 0))
 Room2_rect = Room2.get_rect(topleft=(0, 0))
 Room3_rect = Room3.get_rect(topleft=(0, 0))
 Room4_rect = Room4.get_rect(topleft=(0, 0))
+Room_left1_rect = Room_left1.get_rect(topleft=(0, 0))
+Room_right1_rect = Room_right1.get_rect(topleft=(0, 0))
 
 #clickable images
 BackUI_rect = BackUI.get_rect(topleft=(-15, 353))
@@ -295,6 +297,20 @@ door_point3 = [
     (98, 219)
 ]
 
+door_point4 = [
+    (243, 1),
+    (310, 84),
+    (310, 253),
+    (259, 328)
+]
+
+door_point5 = [
+    (501, 87),
+    (543, 2),
+    (527, 324),
+    (490, 252)
+]
+
 
 # Check if mouse is inside a polygon
 def point_in_polygon(point, polygon):
@@ -361,6 +377,17 @@ def fade_to_room(new_room):
             screen.blit(Room4, Room4_rect)
             screen.blit(BackUI, BackUI_rect)
             screen.blit(BackUI_Text, BackUI_Text_rect)
+
+        elif room == 5:
+            screen.blit(Room_left1, Room_left1_rect)
+            screen.blit(BackUI, BackUI_rect)
+            screen.blit(BackUI_Text, BackUI_Text_rect)    
+
+        elif room == 6:
+            screen.blit(Room_right1, Room_right1_rect)
+            screen.blit(BackUI, BackUI_rect)
+            screen.blit(BackUI_Text, BackUI_Text_rect)          
+
 
         screen.blit(fade, (0, 0))
         pygame.display.flip()
@@ -492,19 +519,41 @@ while running:
 
                     #Room3
                     elif room == 3:
-
+                        
                         if BackUI_rect.collidepoint(event.pos):
                             last_click_time = current_time
                             fade_to_room(2)
 
                     #room4
                     elif room == 4:
+
+                        #door to room3
+                        if point_in_polygon(event.pos, door_point4):
+                            last_click_time = current_time
+                            fade_to_room(5)
+                        
+                        #door to room4
+                        elif point_in_polygon(event.pos, door_point5):
+                            last_click_time = current_time
+                            fade_to_room(6)
+
+                        #Back button
+                        elif BackUI_rect.collidepoint(event.pos):
+                            last_click_time = current_time
+                            fade_to_room(4)
+
+
+                    elif room == 5:
                         if BackUI_rect.collidepoint(event.pos):
                             last_click_time = current_time
-                            fade_to_room(2)
+                            fade_to_room(4)                        
 
+                    elif room == 6:
+                        if BackUI_rect.collidepoint(event.pos):
+                            last_click_time = current_time
+                            fade_to_room(4)   
 
-               #back button
+               #click to go to other rooms
                 elif room == 2:
 
                     #door to room3
@@ -521,38 +570,54 @@ while running:
                     elif BackUI_rect.collidepoint(event.pos):
                         room = 1
 
-
+                #room3
                 elif room == 3:
                     if BackUI_rect.collidepoint(event.pos):
                         room = 2
                        
+                
                 elif room == 4:
-                    if BackUI_rect.collidepoint(event.pos):
+                    #door to room_left1
+                    if point_in_polygon(event.pos, door_point4):
+                        room = 5
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                    
+                    #door to room_right1
+                    elif point_in_polygon(event.pos, door_point5):
+                        room = 6
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+                    #back to room1
+                    elif BackUI_rect.collidepoint(event.pos):
                         room = 2
                     
+
+                elif room == 5:
+                    if BackUI_rect.collidepoint(event.pos):
+                        room = 4
+
+
+                elif room == 6:
+                    if BackUI_rect.collidepoint(event.pos):
+                        room = 4
 
 
 # change cursor when hovering over an interactable object
 
             #room collidepoints
             if room == 1:
-            
                 if point_in_polygon(mouse_pos, door_point1):
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 else:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
-
             elif room == 2:
                 if (BackUI_rect.collidepoint(mouse_pos)
                     or point_in_polygon(mouse_pos, door_point2)
-                    or point_in_polygon(mouse_pos, door_point3)
-                ):
-
+                    or point_in_polygon(mouse_pos, door_point3)):
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 else:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
 
             elif room == 3:
                 if BackUI_rect.collidepoint(mouse_pos):
@@ -560,12 +625,25 @@ while running:
                 else:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)      
 
-
             elif room == 4:
-                if BackUI_rect.collidepoint(mouse_pos):
+                if (BackUI_rect.collidepoint(mouse_pos)
+                    or point_in_polygon(mouse_pos, door_point4)
+                    or point_in_polygon(mouse_pos, door_point5)):
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 else:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)    
+
+            elif room == 5:
+                if BackUI_rect.collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)  
+
+            elif room == 6:
+                if BackUI_rect.collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)  
                                               
 
            # Display images
@@ -576,30 +654,39 @@ while running:
                screen.blit(Room2, Room2_rect)
                screen.blit(BackUI, BackUI_rect)
                screen.blit(BackUI_Text, BackUI_Text_rect)
-               pygame.draw.polygon(
-                   screen,
-                   (255, 0, 0),
-                   door_point2,
-                   2
-               )
-
-               pygame.draw.polygon(
-                screen,
-                (0, 255, 0),
-                door_point3,
-                2
-               )
 
             elif room == 3:
                 screen.blit(Room3, Room3_rect)
                 screen.blit(BackUI, BackUI_rect)
                 screen.blit(BackUI_Text, BackUI_Text_rect)
-            
 
             elif room == 4:
                 screen.blit(Room4, Room4_rect)
                 screen.blit(BackUI, BackUI_rect)
                 screen.blit(BackUI_Text, BackUI_Text_rect)
+                pygame.draw.polygon(
+                   screen,
+                   (255, 0, 0),
+                   door_point4,
+                   2
+               )
+
+                pygame.draw.polygon(
+                screen,
+                (0, 255, 0),
+                door_point5,
+                2
+               )
+
+            elif room == 5:
+                screen.blit(Room_left1, Room_left1_rect)
+                screen.blit(BackUI, BackUI_rect)
+                screen.blit(BackUI_Text, BackUI_Text_rect)              
+
+            elif room == 6:
+                screen.blit(Room_right1, Room_right1_rect)
+                screen.blit(BackUI, BackUI_rect)
+                screen.blit(BackUI_Text, BackUI_Text_rect)             
 
 
     pygame.display.flip()
