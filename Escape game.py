@@ -289,10 +289,10 @@ door_point2 = [
 
 # Room 2 door to Room 4
 door_point3 = [
-    (200, 150),
-    (300, 150),
-    (300, 400),
-    (200, 400)
+    (81, 80),
+    (209, 98),
+    (216, 213),
+    (98, 219)
 ]
 
 
@@ -581,6 +581,13 @@ while running:
                    (255, 0, 0),
                    door_point2,
                    2
+               )
+
+               pygame.draw.polygon(
+                screen,
+                (0, 255, 0),
+                door_point3,
+                2
                )
 
             elif room == 3:
