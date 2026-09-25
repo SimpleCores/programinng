@@ -649,11 +649,31 @@ while running:
            # Display images
             if room == 1:
                screen.blit(Room1, Room1_rect)
+               pygame.draw.polygon(
+                   screen,
+                   (255, 0, 0),
+                   door_point1,
+                   2
+               )
 
             elif room ==2:
                screen.blit(Room2, Room2_rect)
                screen.blit(BackUI, BackUI_rect)
                screen.blit(BackUI_Text, BackUI_Text_rect)
+               pygame.draw.polygon(
+                   screen,
+                   (255, 0, 0),
+                   door_point2,
+                   2
+               )
+
+               pygame.draw.polygon(
+                screen,
+                (0, 255, 0),
+                door_point3,
+                2
+               )
+
 
             elif room == 3:
                 screen.blit(Room3, Room3_rect)
